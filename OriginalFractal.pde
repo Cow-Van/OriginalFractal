@@ -14,12 +14,10 @@ public void draw() {
 }
 
 public void fractal(float x, float y, int n) {
-  if (n > 5000) {
+  stroke(random(255), random(255), random(255));
+
+  if (n > 1000) {
     return;
-  }
-  
-  if (!hexagons.containsKey(n)) {
-    hexagons.put(n, new Hexagon(0, 0, n, color(random(255), random(255), random(255))));
   }
   
   pushMatrix();
@@ -27,30 +25,37 @@ public void fractal(float x, float y, int n) {
   scale(s);
   rotate(rotation + n * PI / 9);
 
-  hexagons.get(n).show();
+  float[] line1 = new float[]{n, 0};
+  float[] line2 = new float[]{ (n *0.5)  + 0,  (-(sqrt(3) / 2 * n))  + 0};
+  float[] line3 = new float[]{ (- (n * 0.5))  + 0,  (-(sqrt(3) / 2 * n))  + 0};
+  float[] line4 = new float[]{ (-n)  + 0, 0};
+  float[] line5 = new float[]{ (-(n * 0.5))  + 0,  (sqrt(3) / 2 * n)  + 0};
+  float[] line6 = new float[]{ (n * 0.5)  + 0,  (sqrt(3) / 2 * n)  + 0};
+  
+  beginShape();
+  vertex(line1[0], line1[1]);
+  vertex(line2[0], line2[1]);
+  vertex(line3[0], line3[1]);
+  vertex(line4[0], line4[1]);
+  vertex(line5[0], line5[1]);
+  vertex(line6[0], line6[1]);
+  endShape(CLOSE);
+
   popMatrix();
   
   if (zoomOut) {
-    s -= 0.00001;
+    s -= 0.01;
   } else {
-    s += 0.00001;
+    s += 0.01;
   }
   
   if (s < 0.07) {
-    randomizeColors();
     zoomOut = false;
   } else if (s > 5) {
     zoomOut = true;
   }
   
-  rotation += TWO_PI;
+  rotation += PI / 3;
   
-  fractal(x, y, n + 10);
-}
-
-public void randomizeColors() {
-  for (int i = 0; i <= 5000; i += 10) {
-    Hexagon hexagon = hexagons.get(i);
-    hexagon.startLerpColor(color(random(255), random(255), random(255)), 100);
-  }
+  fractal(x, y, n + 5);
 }
